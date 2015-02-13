@@ -123,11 +123,14 @@ module ActiveRecord
         #
         # Hence this method.
         def inverse_which_updates_counter_cache(reflection = reflection())
-          counter_name = cached_counter_attribute_name(reflection)
-          inverse_which_updates_counter_named(counter_name, reflection)
+          if reflection.options[:counter_cache]
+            counter_name = cached_counter_attribute_name(reflection)
+            inverse_which_updates_counter_named(counter_name, reflection)
+          end
         end
         alias inverse_updates_counter_cache? inverse_which_updates_counter_cache
 
+        # does anyone call this next method? rubymine says "no" ;)
         def inverse_which_updates_counter_named(counter_name, reflection)
           reflection.klass._reflections.values.find { |inverse_reflection|
             inverse_reflection.belongs_to? &&
